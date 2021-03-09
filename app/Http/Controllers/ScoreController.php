@@ -36,17 +36,6 @@ class ScoreController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Score  $score
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Score $score)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $score
@@ -68,6 +57,7 @@ class ScoreController extends Controller
     {
         //
     }
+    
     //Añadidas
     public function deleteComment(Score $score){
         //Mirar si es tipo admin puede "borrar"(actualizar a null el comentario) sin comprobar si es suyo
