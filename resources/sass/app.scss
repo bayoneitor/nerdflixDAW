@@ -1,0 +1,33 @@
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+// Font Awesome
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/regular';
+@import '~@fortawesome/fontawesome-free/scss/solid';
+@import '~@fortawesome/fontawesome-free/scss/brands';
+
+// INCLUDES
+@import 'includes/elegant-icons';
+@import 'includes/plyr';
+@import 'includes/nice-select';
+@import 'includes/owl.carousel.min';
+@import 'includes/slicknav.min';
+
+// Variables
+@import 'variable';
+@import "mixins";
+// Basico
+@import "base";
+@import "header";
+@import "hero";
+@import "product";
+@import "anime-details";
+@import "anime-watching";
+@import "breadcrumb";
+@import "blog";
+@import "blog-details";
+@import "login";
+@import "signup";
+@import "footer";
+@import "responsive";
+@import "modify";

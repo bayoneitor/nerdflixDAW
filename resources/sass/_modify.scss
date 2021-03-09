@@ -1,0 +1,52 @@
+.invalid-feedback, .valid-feedback {
+    display: block !important;
+}
+
+input[type=text], textarea {
+    color: black !important;
+}
+
+.settings-buttons {
+    .boton {
+        margin-bottom: 20px;
+    }
+    .text{
+        *{
+            color:white;
+        }
+    }
+}
+
+form {
+    &.video {
+        h6 {
+            color: white;
+            font-weight: bold;
+            padding-bottom: 4px;
+        }
+
+        input[type=text], textarea {
+            width: 100%;
+            font-size: 15px;
+            padding-left: 20px;
+            padding-top: 12px;
+            height: 110px;
+            border: none;
+            border-radius: 5px;
+            resize: none;
+            margin-bottom: 10px;
+        }
+
+        input[type=text] {
+            height: auto;
+            padding-top: 6px;
+            padding-bottom: 6px;
+        }
+    }
+}
+
+.modal .product__item {
+    background-color: #4f494b;
+    padding: 10px;
+    border-radius: 20px;
+}
