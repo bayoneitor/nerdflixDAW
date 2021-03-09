@@ -11,7 +11,7 @@
                         <div class="row">
                             <div class="col-lg-8 col-md-8 col-sm-8">
                                 <div class="section-title">
-                                    <h4>Agregados Recientemente</h4>
+                                    <h4>Todos los videos (A -> Z)</h4>
                                 </div>
                             </div>
                         </div>
