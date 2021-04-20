@@ -108,6 +108,9 @@
                                     @endif
 
                                             </span>
+                                           @if ($score->created_at != $score->updated_at)
+                                            - <span>editado</span>
+                                           @endif
                                 @if($score->user_id == Auth::user()->id || Auth::user()->hasRole('admin'))
                                 <span class="delete">
                                     <form method="post" action="{{route('video.destroy.score',$score->id)}}">
