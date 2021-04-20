@@ -31,7 +31,7 @@
                         </div>
                     </div>
                     <textarea
-                        placeholder="Tu comentario (no obligatorio)" name="comment"
+                        placeholder="Tu comentario" name="comment"
                     ></textarea>
                     <button type="submit">
                         <i class="fa fa-location-arrow"></i> Enviar
@@ -64,6 +64,14 @@
                 @elseif($errors->first() == 'commentDeleteError')
                     <div class="alert alert-danger text-center" role="alert">
                         No se ha podido eliminar el comentario.
+                    </div>
+                @elseif($errors->first() == 'updateCorrect')
+                    <div class="alert alert-success text-center" role="alert">
+                        Comentario actualizado correctamente.
+                    </div>
+                @elseif($errors->first() == 'updateError')
+                    <div class="alert alert-danger text-center" role="alert">
+                        No se ha podido actualizar el comentario.
                     </div>
                 @endif
             @endif
@@ -101,7 +109,68 @@
 
                                             </span>
                                 @if($score->user_id == Auth::user()->id || Auth::user()->hasRole('admin'))
-                                    <span class="delete"><a href="{{route('video.deleteComment',$score->id)}}">Delete</a></span>
+                                <span class="delete">
+                                    <form method="post" action="{{route('video.destroy.score',$score->id)}}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <input type="submit" value="Borrar" class="btn btn-danger btn-sm">
+                                    </form>
+                                </span>
+                                    @if($score->user_id == Auth::user()->id)
+                                        <span class="delete" style="margin-right: 10px">
+                                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#scoreModal">
+                                                Editar
+                                            </button>
+                                        </span>
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="scoreModal" tabindex="-1" role="dialog" aria-labelledby="scoreModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                <h5 class="modal-title" id="scoreModalLabel">Actualizar comentario/puntuación</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                </div>
+                                                <form method="POST" action="{{route('video.update.score',$score->id)}}">
+                                                    <div class="modal-body">
+                                                            @method('PUT')
+                                                            @csrf
+                                                            <div style="display: flex">
+                                                                <label for="score" style="color: black">Puntuación:</label>
+                                                                <input
+                                                                    type="range"
+                                                                    name="score"
+                                                                    id="score"
+                                                                    min="0"
+                                                                    max="5"
+                                                                    step="0.5"
+                                                                    value="{{$score->score}}"
+                                                                    style="margin: 0 20px 20px 20px"
+                                                                />
+                                                                <div id="score-stars">
+                                                                        <span class="icon_star" style="color: red"></span
+                                                                        ><span class="icon_star" style="color: red"></span
+                                                                    ><span class="icon_star-half_alt" style="color: red"></span
+                                                                    ><span class="icon_star_alt" style="color: red"></span
+                                                                    ><span class="icon_star_alt" style="color: red"></span>
+                                                                </div>
+                                                            </div>
+                                                            <label for="comment" style="color: black">Comentario:</label>
+                                                            <br>
+                                                            <textarea
+                                                                placeholder="{{$score->comment}}" id="comment" name="comment" style="width: 100%"
+                                                            >{{$score->comment}}</textarea>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                    <input type="submit" class="btn btn-primary" value="Guardar Cambios"/>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    @endif
                                 @endif
                             </h6>
                             <p>{{$score->comment}}</p>

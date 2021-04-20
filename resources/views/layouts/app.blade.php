@@ -82,7 +82,11 @@
     <div class="h-100 d-flex align-items-center justify-content-center">
         <div class="search-close-switch"><i class="icon_close"></i></div>
         <form class="search-model-form">
-            <input type="text" id="search-input" placeholder="Search here....."/>
+            <input type="text" id="search-input" placeholder="Buscar aquí....."/>
+            <br>
+            <br>
+            <br>
+        <input type="button" id="search-button" class="btn btn-light" value="Buscar">
         </form>
     </div>
 </div>
@@ -90,6 +94,18 @@
 
 <!-- Scripts -->
 <script src="{{ asset('js/app.js') }}" defer></script>
+<script>
+    var searchText = document.getElementById("search-input");
+    var searchButton = document.getElementById("search-button");
+    searchButton.addEventListener("click", function () {
+        let value = searchText.value.trim();
+        if (value != '') {
+            let url = "{{route('video.search', ':value')}}";
+            url = url.replace(':value',value);
+            window.location.href = url;
+        }
+    });
+</script>
 @yield('extraJS')
 </body>
 </html>

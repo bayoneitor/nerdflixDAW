@@ -29,10 +29,10 @@
                                     </ul>
                                 </li>-->
                                 @if(Auth::user()->hasAnyRole(['editor','admin']))
-                                <li><a href="{{route('videos.create')}}">Añadir Video</a></li>
+                                <li><a href="{{route('video.create')}}">Añadir Video</a></li>
                                 @endif
                                 @if(Auth::user()->hasRole('admin'))
-                                <li><a href="./admin">Admin</a></li>
+                                <li><a href="{{route('admin.index')}}">Admin</a></li>
                                 @endif
                             </ul>
                         </nav>

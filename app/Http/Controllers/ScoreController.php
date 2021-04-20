@@ -18,7 +18,7 @@ class ScoreController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'score' => ['required', 'string', 'min:1'],
+            'score' => ['required', 'numeric', 'min:0', 'max:5'],
             'comment' => ['required', 'string', 'min:1'],
             'video' => ['required', 'string', 'min:1'],
         ]);
@@ -30,7 +30,7 @@ class ScoreController extends Controller
             $video->video_id = $request->video;
             $video->save();
 
-         return back()->withErrors(['commentAdded']);
+            return back()->withErrors(['commentAdded']);
         }
         return back()->withErrors(['commentAddedError']);
     }
@@ -44,10 +44,20 @@ class ScoreController extends Controller
      */
     public function update(Request $request, Score $score)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'score' => ['required', 'numeric', 'min:0', 'max:5'],
+            'comment' => ['required', 'string', 'min:1']
+        ]);
+        if (!$validator->fails()) {
+            if ($score->user->id == Auth::user()->id || Auth::user()->hasRole('admin')) {
+                $score->update($request->all());
+                return back()->withErrors(['updateCorrect']);
+            }
+        }
+        return back()->withErrors(['updateError']);
     }
 
-    
+
     /**
      * Remove the specified resource from storage.
      *
@@ -56,15 +66,8 @@ class ScoreController extends Controller
      */
     public function destroy(Score $score)
     {
-        //
-    }
-    
-    //Añadidas
-    public function deleteComment(Score $score){
-        //Mirar si es tipo admin puede "borrar"(actualizar a null el comentario) sin comprobar si es suyo
-        if ($score->user->id == Auth::user()->id || Auth::user()->hasRole('admin')){
-            $score->comment = null;
-            $score->save();
+        if ($score->user->id == Auth::user()->id || Auth::user()->hasRole('admin')) {
+            $score->delete();
             return back()->withErrors(['commentDelete']);
         }
         return back()->withErrors(['commentDeleteError']);

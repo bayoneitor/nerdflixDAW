@@ -21352,7 +21352,7 @@ ol {
   height: 50px;
   width: 100%;
   font-size: 15px;
-  color: #b7b7b7;
+  color: #383838;
   background: #ffffff;
   border: none;
   padding-left: 76px;
@@ -21966,11 +21966,13 @@ ol {
     padding: 18px 20px 20px;
   }
 }
-.invalid-feedback, .valid-feedback {
+.invalid-feedback,
+.valid-feedback {
   display: block !important;
 }
 
-input[type=text], textarea {
+input[type=text],
+textarea {
   color: black !important;
 }
 
@@ -21986,7 +21988,10 @@ form.video h6 {
   font-weight: bold;
   padding-bottom: 4px;
 }
-form.video input[type=text], form.video textarea {
+form.video input[type=text],
+form.video input[type=email],
+form.video input[type=password],
+form.video textarea {
   width: 100%;
   font-size: 15px;
   padding-left: 20px;
@@ -21997,7 +22002,9 @@ form.video input[type=text], form.video textarea {
   resize: none;
   margin-bottom: 10px;
 }
-form.video input[type=text] {
+form.video input[type=text],
+form.video input[type=email],
+form.video input[type=password] {
   height: auto;
   padding-top: 6px;
   padding-bottom: 6px;
@@ -22007,4 +22014,60 @@ form.video input[type=text] {
   background-color: #4f494b;
   padding: 10px;
   border-radius: 20px;
+}
+
+.search-model-form #search-input {
+  color: white !important;
+}
+.search-model-form .btn-light {
+  color: #212529 !important;
+  background-color: #f8f9fa !important;
+  border-color: #f8f9fa !important;
+}
+
+.table-users .actions *,
+.table-videos .actions * {
+  margin-left: 10px;
+  cursor: pointer;
+}
+.table-users .actions .info,
+.table-users .actions .edit,
+.table-users .actions .delete,
+.table-videos .actions .info,
+.table-videos .actions .edit,
+.table-videos .actions .delete {
+  color: white;
+  transition: color 0.2s;
+}
+.table-users .actions .info:hover,
+.table-users .actions .edit:hover,
+.table-users .actions .delete:hover,
+.table-videos .actions .info:hover,
+.table-videos .actions .edit:hover,
+.table-videos .actions .delete:hover {
+  color: skyblue;
+}
+.table-users .actions .edit:hover,
+.table-videos .actions .edit:hover {
+  color: greenyellow;
+}
+.table-users .actions .delete:hover,
+.table-videos .actions .delete:hover {
+  color: red;
+}
+
+.seach-user label {
+  color: white;
+  font-weight: bold;
+}
+.seach-user input,
+.seach-user .form-check-inline {
+  margin: 0 20px;
+}
+
+.check-role {
+  color: white;
+  text-transform: capitalize;
+  margin-left: 10px;
+  margin-bottom: 10px;
 }

@@ -1,8 +1,10 @@
-.invalid-feedback, .valid-feedback {
+.invalid-feedback,
+.valid-feedback {
     display: block !important;
 }
 
-input[type=text], textarea {
+input[type="text"],
+textarea {
     color: black !important;
 }
 
@@ -10,9 +12,9 @@ input[type=text], textarea {
     .boton {
         margin-bottom: 20px;
     }
-    .text{
-        *{
-            color:white;
+    .text {
+        * {
+            color: white;
         }
     }
 }
@@ -25,7 +27,10 @@ form {
             padding-bottom: 4px;
         }
 
-        input[type=text], textarea {
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        textarea {
             width: 100%;
             font-size: 15px;
             padding-left: 20px;
@@ -37,7 +42,9 @@ form {
             margin-bottom: 10px;
         }
 
-        input[type=text] {
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
             height: auto;
             padding-top: 6px;
             padding-bottom: 6px;
@@ -49,4 +56,54 @@ form {
     background-color: #4f494b;
     padding: 10px;
     border-radius: 20px;
+}
+.search-model-form {
+    #search-input {
+        color: white !important;
+    }
+    .btn-light {
+        color: #212529 !important;
+        background-color: #f8f9fa !important;
+        border-color: #f8f9fa !important;
+    }
+}
+.table-users,
+.table-videos {
+    .actions {
+        * {
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .info,
+        .edit,
+        .delete {
+            color: white;
+            transition: color 0.2s;
+            &:hover {
+                color: skyblue;
+            }
+        }
+        .edit:hover {
+            color: greenyellow;
+        }
+        .delete:hover {
+            color: red;
+        }
+    }
+}
+.seach-user {
+    label {
+        color: white;
+        font-weight: bold;
+    }
+    input,
+    .form-check-inline {
+        margin: 0 20px;
+    }
+}
+.check-role {
+    color: white;
+    text-transform: capitalize;
+    margin-left: 10px;
+    margin-bottom: 10px;
 }

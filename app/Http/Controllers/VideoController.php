@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Video;
+use App\Models\User;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\File;
 use Carbon\Carbon;
 
 class VideoController extends Controller
@@ -22,7 +21,13 @@ class VideoController extends Controller
     public function index()
     {
         $videos = Video::orderBy('title', 'asc')->paginate(6);
-        return view('videos.index')->with(['videos' => $videos]);
+        return view('video.index')->with(['videos' => $videos]);
+    }
+
+    public function search($title)
+    {
+        $videos = Video::orderBy('title', 'asc')->where('title', 'like', '%' . $title . '%')->paginate(6);
+        return view('video.search')->with(['videos' => $videos, 'title' => $title]);
     }
 
     /**
@@ -32,7 +37,7 @@ class VideoController extends Controller
      */
     public function create()
     {
-        return view('videos.create');
+        return view('video.create');
     }
 
     /**
@@ -70,9 +75,9 @@ class VideoController extends Controller
             //Tags
             $this->insertTags($request->tags, $video);
 
-            return redirect()->route('videos.show', $video->id);
+            return redirect()->route('video.show', $video->id);
         }
-        return redirect()->route('videos.create')->withErrors($validator);
+        return redirect()->route('video.create')->withErrors($validator);
     }
 
     /**
@@ -84,7 +89,7 @@ class VideoController extends Controller
     public function show(Video $video)
     {
         $currentTime = Carbon::now();
-        return view('videos.show')->with(['video' => $video, 'currentTime' => $currentTime]);
+        return view('video.show')->with(['video' => $video, 'currentTime' => $currentTime]);
     }
 
     public function watch(Video $video)
@@ -93,7 +98,7 @@ class VideoController extends Controller
             Auth::user()->videosWatched()->attach($video);
         }
         $currentTime = Carbon::now();
-        return view('videos.watch')->with(['video' => $video, 'currentTime' => $currentTime]);
+        return view('video.watch')->with(['video' => $video, 'currentTime' => $currentTime]);
     }
 
     /**
@@ -104,7 +109,7 @@ class VideoController extends Controller
      */
     public function edit(Video $video)
     {
-        return view('videos.edit')->with('video', $video);
+        return view('video.edit')->with('video', $video);
     }
 
     /**
@@ -122,12 +127,23 @@ class VideoController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'title' => ['nullable', 'string', 'min:4'],
+            'title' => ['nullable', 'string', 'min:4', 'max:150'],
             'description' => ['nullable', 'string', 'min:20'],
             'tags' => ['nullable', 'string', 'min:2'],
             'frame' => ['nullable', 'file', 'mimes:jpg,bmp,png', 'max:3072'],
             'miniature' => ['nullable', 'file', 'mimes:jpg,bmp,png', 'max:1024'],
+            'email' => ['nullable', 'string', 'email', 'max:255'],
         ]);
+
+        if ($request->filled('email') && $user->hasRole('admin')) {
+            $userEmail = User::where('email', $request->email)->get('id');
+            $validator->after(function ($validator) use ($userEmail) {
+                if ($userEmail->count() == 0) {
+                    $validator->errors()->add('email', '¡El email introducido no existe!');
+                }
+            });
+        }
+
         if (!$validator->fails()) {
             if ($request->filled('title') && $video->title != $request->title) {
                 $video->title = $request->title;
@@ -136,26 +152,29 @@ class VideoController extends Controller
                 $video->cont = $request->description;
             }
             if ($request->file('frame')) {
-                unlink(public_path('storage/'.$video->route_frame));
+                unlink(public_path('storage/' . $video->route_frame));
 
                 $pathFrame = $request->file('frame')->store('img/frames', 'public');
                 $video->route_frame = $pathFrame;
             }
             if ($request->file('miniature')) {
-                unlink(public_path('storage/'.$video->route_miniature));
+                unlink(public_path('storage/' . $video->route_miniature));
 
                 $pathMiniature = $request->file('miniature')->store('img/miniature', 'public');
                 $video->route_miniature = $pathMiniature;
             }
+            if ($request->filled('email') && $user->hasRole('admin')) {
+                $video->user_id = $userEmail[0]->id;
+            }
             $video->save();
             //Tags
-            if ($request->filled('tags')){
+            if ($request->filled('tags')) {
                 $video->tags()->detach();
                 $this->insertTags($request->tags, $video);
             }
-            return redirect()->route('videos.show', $video->id);
+            return redirect()->route('video.show', $video->id);
         }
-        return redirect()->route('videos.update')->withErrors($validator);
+        return redirect()->route('video.edit', $video->id)->withErrors($validator);
     }
 
     /**
@@ -164,7 +183,7 @@ class VideoController extends Controller
      * @param Video $video
      * @return Response
      */
-    public function destroy(Video $video)
+    public function destroy(Video $video, $back = null)
     {
         $user = Auth::user();
         if ($video->user_id != $user->id && !$user->hasRole('admin')) {
@@ -172,10 +191,14 @@ class VideoController extends Controller
         }
         //No hace falta, se borra solo de todos los sitios
         //$video->tags()->detach();
-        unlink(public_path('storage/'.$video->route_video));
-        unlink(public_path('storage/'.$video->route_miniature));
-        unlink(public_path('storage/'.$video->route_frame));
+        unlink(public_path('storage/' . $video->route_video));
+        unlink(public_path('storage/' . $video->route_miniature));
+        unlink(public_path('storage/' . $video->route_frame));
         $video->delete();
+
+        if ($back == 'back') {
+            return redirect()->back();
+        }
         return redirect()->route('index');
     }
 

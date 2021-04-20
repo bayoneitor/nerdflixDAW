@@ -85,9 +85,27 @@ class UserController extends Controller
      * @param User $user
      * @return Response
      */
-    public function destroy(User $user)
+    public function destroy(User $user, $back = null)
     {
-        //
+        $userAuth = Auth::user();
+        if ($userAuth->id != $user->id && !$userAuth->hasRole('admin')) {
+            abort(401, 'Non authorized action.');
+        }
+
+        $videosUser = $user->videos()->get();
+        foreach ($videosUser as $video) {
+            unlink(public_path('storage/' . $video->route_video));
+            unlink(public_path('storage/' . $video->route_miniature));
+            unlink(public_path('storage/' . $video->route_frame));
+            $video->delete();
+        }
+
+        $user->delete();
+
+        if ($back == 'back') {
+            return redirect()->back();
+        }
+        return redirect()->route('index');
     }
 
     //Propias
@@ -101,7 +119,7 @@ class UserController extends Controller
     {
         if ($request->filled('name') || $request->filled('email')) {
             $validator = Validator::make($request->all(), [
-                'name' => ['nullable', 'string', 'max:255'],
+                'name' => ['nullable', 'string', 'min:3', 'max:255'],
                 'email' => ['nullable', 'string', 'email', 'max:255'],
             ]);
             if (!$validator->fails()) {
@@ -114,7 +132,7 @@ class UserController extends Controller
                 }
                 $user->save();
 
-                return redirect()->route('settings.profile',['success' => true]);
+                return redirect()->route('settings.profile', ['success' => true]);
             }
         }
         return redirect()->route('settings.profile')->withErrors($validator);
@@ -134,7 +152,7 @@ class UserController extends Controller
             } else {
                 $user->password = Hash::make($request->newPassword);
                 $user->save();
-                return redirect()->route('settings.profile',['success' => true]);
+                return redirect()->route('settings.profile', ['success' => true]);
             }
         }
         return redirect()->route('settings.profile')->withErrors($validator);
